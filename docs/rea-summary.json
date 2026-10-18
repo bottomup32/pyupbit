@@ -1,0 +1,26 @@
+{
+  "application_version": "0.2.0",
+  "tool": "rea-agents@6.5.0",
+  "evidence_id": "ev_d53000e7b2eacefa9f5b276b49f8c00c2f6695b7b809213d7fc0052500198ddf",
+  "statistics": {
+    "relevant_files": 2,
+    "nested_asar_containers": 0,
+    "text_bytes_read": 68366,
+    "invalid_utf8_files": 0,
+    "parsed_javascript_files": 1,
+    "visited_ast_nodes": 11294,
+    "findings": 2,
+    "modules": 0,
+    "parse_failures": 0
+  },
+  "root_artifact_sha256": "7102958d3d3d0dfacae4c82f4d4a097dac1c2b3c9587de3a4892ceeb22499e00",
+  "evidence_sha256": "b040ca4c2891ad3dd4ec0fa3b4dff5c9cad37cdbbef5d906f2de5110066a3d82",
+  "compressed_evidence": "/workspace/shared/evidence/hvac-implementation.json.gz",
+  "semantic_coverage_status": "unknown",
+  "source_sha256": {
+    "app.js": "ab07e13fc786675cf01632381145b5cc8de5b8cdd62190bb0941daa38e6f93ab",
+    "index.html": "d1dc1aeba727f666e690c781f8214ff5110379c8b608a5a0183e4f56f02ffd4b",
+    "style.css": "506fabc33959710495d7b0cb05cdcec2b38f004b2cf848aa6598c3b028c73d69"
+  },
+  "scope": "Independent implementation; not an authenticated Jobber capture."
+}

@@ -1,0 +1,35 @@
+PASS Customer creation persists contact and access details
+PASS Additional property is linked to customer
+PASS Equipment retains its customer and property
+PASS Estimate line items, discount and tax use cent-accurate totals
+PASS Approved estimate schedules a linked technician visit
+PASS Work checklist and service notes persist
+PASS Completed job generates invoice from the approved estimate
+PASS Partial payment updates the invoice without charging a card
+PASS Remaining payment settles the exact invoice balance
+PASS Customer invoice preview renders
+PASS Overlapping technician visits are rejected
+PASS Adjacent visits are allowed
+PASS Settled invoice rejects excess payments
+PASS Unapproved estimates cannot be scheduled
+PASS Job status cannot skip stages and unfinished jobs cannot be invoiced
+PASS Invalid monetary precision and quantities are rejected
+PASS Due plan visit creates approved estimate and advances its due date once
+PASS Follow-up tasks can be completed
+PASS Photo attachment uploads and downloads
+PASS Mismatched upload signatures are rejected
+PASS Invoice CSV export is available
+PASS Stock cannot become negative
+PASS Part usage and stock receipts update inventory with audit records
+PASS Parts cannot be consumed against a completed job
+PASS Work timers start and stop, preventing duplicate running timers
+PASS Manual time entry rejects overlapping technician work periods
+PASS Job expense is linked and stored in exact cents
+PASS Approved request estimate marks its linked request won
+PASS Equipment cannot link a different customer’s property
+PASS Company details and billing defaults persist
+PASS Mobile overview has no horizontal page overflow
+PASS Mobile navigation opens and closes
+PASS All 16 screens render without browser errors
+PASS Customer and paid invoice survive server restart
+COMPLETED: 34 meaningful workflow checks passed; isolated database /tmp/airframe-test-ls8PO7
