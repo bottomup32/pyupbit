@@ -1,0 +1,25 @@
+Online deployment preparation — 2026-10-18
+
+NOT PUBLISHED: no Sites deployment tools, hosting credential or public URL
+were available in this session. Sites runtime/storage support is unverified.
+
+python tests/online.py — 6 tests passed
+  Fail-closed configuration, guarded routes/public health, secure cookie and
+  data redaction, CSRF/logout, expiry/tampering/rate limit, restart/backup.
+
+node tests/container.cjs — 9 checks passed
+  Non-root application; mobile login; browser login; customer creation;
+  logout revocation; container removal/recreation retains database;
+  backup download; signed-in mobile overflow; no browser errors.
+  Temporary volume and loopback-only host publishing. No public hosting used.
+
+node tests/workflow.cjs — 34 existing workflow checks passed after the
+allowed_origin extension. Original customer database was not used by tests.
+
+python manage.py check — original database integrity and foreign keys OK;
+5 original sample customers, 4 original sample jobs retained.
+
+Real public HTTPS, platform volume permissions, hosting restarts and the
+public URL still require deployment validation. The local HTTP browser
+smoke test does not prove external TLS. HTTPS cookie flags are separately
+covered by tests/online.py using a simulated trusted-proxy origin.

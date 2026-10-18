@@ -1,0 +1,12 @@
+PASS Editing a draft preserves its identity, items and exact tax total
+PASS Company branding updates in settings, navigation and the dashboard
+PASS Customer records and dialogs work with keyboard navigation
+PASS Printable invoice PDF contains the company, invoice and correct amount
+PASS Settings download button exports a real SQLite workspace backup
+PASS All 16 screens fit a 320px viewport without page overflow
+PASS All 16 screens fit a 390px viewport without page overflow
+PASS All 16 screens fit a 768px viewport without page overflow
+PASS All 16 screens fit a 1440px viewport without page overflow
+PASS All 12 create dialogs fit a 320px phone
+PASS All 16 empty-state screens render without JavaScript errors
+COMPLETED: 11 UI acceptance groups passed, including 64 responsive screen checks and 12 create dialogs.

@@ -1,0 +1,10 @@
+*
+!server.py
+!storage.py
+!online.py
+!static/
+!static/**
+!assets/
+!assets/**
+!Dockerfile
+!.dockerignore

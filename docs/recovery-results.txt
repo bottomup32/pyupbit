@@ -1,0 +1,15 @@
+test_backup_never_overwrites_and_bad_restore_is_rejected (__main__.RecoveryAcceptance.test_backup_never_overwrites_and_bad_restore_is_rejected) ... ok
+test_bundled_timezone_works_without_system_zone_database (__main__.RecoveryAcceptance.test_bundled_timezone_works_without_system_zone_database) ... ok
+test_concurrent_payments_cannot_overpay (__main__.RecoveryAcceptance.test_concurrent_payments_cannot_overpay) ... ok
+test_concurrent_stock_usage_never_goes_negative (__main__.RecoveryAcceptance.test_concurrent_stock_usage_never_goes_negative) ... ok
+test_daylight_saving_invalid_and_repeated_times_are_rejected (__main__.RecoveryAcceptance.test_daylight_saving_invalid_and_repeated_times_are_rejected) ... ok
+test_declined_estimate_cannot_be_silently_reapproved (__main__.RecoveryAcceptance.test_declined_estimate_cannot_be_silently_reapproved) ... ok
+test_download_backup_restores_files_and_preserves_previous_workspace (__main__.RecoveryAcceptance.test_download_backup_restores_files_and_preserves_previous_workspace) ... ok
+test_draft_edit_preserves_identity_and_locks_after_approval (__main__.RecoveryAcceptance.test_draft_edit_preserves_identity_and_locks_after_approval) ... ok
+test_one_click_launcher_reuses_server_and_stops_its_child (__main__.RecoveryAcceptance.test_one_click_launcher_reuses_server_and_stops_its_child) ... ok
+test_same_workspace_cannot_run_twice_and_releases_lock_on_exit (__main__.RecoveryAcceptance.test_same_workspace_cannot_run_twice_and_releases_lock_on_exit) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 3.388s
+
+OK

@@ -1,399 +1,89 @@
-# pyupbit
-Python Wrapper for Upbit API
+# Airframe — 미국 HVAC 업체용 CRM
 
-## Documentation
+고객 문의부터 견적, 현장 방문, 청구, 수금까지 연결하는 **로컬 단일 회사용 프로토타입**입니다. 화면은 미국 업체 기준의 영어이며 금액은 USD, 업무 시간대는 America/Los_Angeles입니다.
 
-https://pyupbit.readthedocs.io/en/latest/
+## 실행
 
+빠른 실행과 아침 검토 순서는 [START_HERE.md](START_HERE.md), 화면 갤러리는 `REVIEW.html`에 있습니다. Windows에서는 `Start Airframe.bat`, macOS에서는 `Start Airframe.command`를 열 수 있습니다. 터미널에서는 `python3 launch.py`가 준비 상태를 확인하고 브라우저를 엽니다.
 
-## Installation
-파이썬 개발 환경으로 최신 버전의 Anaconda를 설치하세요. (Python3 버전용)
+Python 3.12 이상만 있으면 실행됩니다. 앱 자체는 외부 Python/JavaScript 패키지나 API 키가 필요하지 않습니다.
 
-```sh
-pip install pyupbit
+```bash
+cd /workspace/hvac-crm
+python server.py --port 8080
 ```
 
-pyjwt 모듈을 필요로 합니다. (pyjwt >= 2.0)
+서버는 루프백 주소에만 바인딩됩니다. 개발 환경 내부에서 브라우저로 확인했으며 공개 배포하지 않았습니다. 다른 포트는 `--port`, 별도 데이터베이스는 `HVAC_DB` 환경변수로 지정합니다.
 
-```sh
-pip install pyjwt
+```bash
+HVAC_DB=/tmp/hvac-sandbox.sqlite3 python server.py --port 8081
 ```
 
-## Import
-```python
-import pyupbit
+기본 데이터는 `data/crm.sqlite3`에 저장됩니다. 첫 실행 시 가상 고객 5명, 기사 3명, 작업 4건, 견적, 장비와 부품을 넣습니다. 서버를 재시작해도 작업 내용이 유지됩니다. 실제 고객 정보나 Jobber 계정 데이터를 가져오지 않았습니다. 시작 시 일별 백업이 생성됩니다. Settings에서 전체 SQLite 백업을 다운로드하거나 `python3 manage.py backup`으로 실행 중에도 일관된 백업을 만들 수 있습니다. 복구는 서버를 종료한 뒤 `python3 manage.py restore 백업파일.sqlite3`로 실행하며, 복구 직전 데이터도 보존합니다. `python3 manage.py check`는 무결성을 검사합니다.
+
+## 구현한 화면과 기능
+
+| 화면 | 동작 |
+|---|---|
+| Overview | 오늘의 방문, 수금, 미수금, 정비 예정 장비, 팀, 후속 작업, 활동 내역 |
+| Dispatch board | 날짜·상태 필터, 기사별 보드·목록, 배정·일정 변경·취소, 중복 일정 차단 |
+| Customers | 등록·수정·보관·복원, 여러 사업장, 장비·작업·견적·청구 이력 |
+| Requests | 문의 접수, 출처·우선순위, 연락·성사·실패 관리, 견적으로 전환 |
+| Estimates | 가격표 항목·사용자 항목, 수량·단가·할인·세금, 초안 수정·승인·거절, 방문 일정 연결 |
+| Invoices | 완료 작업 청구, 납기, 미수금·연체, 부분 수금·완납, 고객 화면 미리보기, 인쇄/PDF |
+| Maintenance plans | 정기 서비스 계약, 주기·다음 방문일, 일시중지·재개·취소, 만기 방문 견적 준비 |
+| Equipment | 종류·제조사·모델·시리얼, 사업장 연결, 다음 서비스 날짜와 기한 경과 표시 |
+| Price book | 서비스·부품 가격 등록·수정·보관, 견적에 재사용 |
+| Team | 기사 등록·활성화 관리, 전문 분야와 작업량 |
+| Time tracking | 작업 시작/완료에 따른 타이머, 중지·재개, 과거 작업 시간 수동 등록, 시간 중복 차단 |
+| Expenses | 작업별 공급업체·분류·날짜·금액·설명 기록 |
+| Parts inventory | SKU·수량·원가·재주문 기준, 입고·재고 조정·작업별 사용, 재고 부족 차단 |
+| Tasks | 고객별 후속 작업, 기한, 완료·재개 |
+| Reports | 작업·견적 승인율·수금·미수금, 활동 기록, 12종 CSV 내보내기 |
+| Settings | 회사 연락처·기본 세율·청구 납기, 외부 연동 상태 표시 |
+
+고객 기록에는 메모, 이메일/SMS 초안, 사진·PDF 첨부 기능도 있습니다. 파일은 PNG/JPEG/PDF, 최대 2 MB이며 고객 또는 작업에 연결됩니다.
+
+## 처음 확인할 흐름
+
+1. **Customers**에서 고객과 사업장·장비를 등록합니다.
+2. **Requests**에서 접수한 문의를 열고 **Prepare estimate**를 선택합니다.
+3. 가격표에서 항목을 추가하고 견적을 저장한 뒤 **Record approval**로 고객 승인을 기록합니다.
+4. 승인된 견적에서 **Schedule visit**로 기사와 방문 시간을 선택합니다.
+5. 작업에서 **Mark en route → Start job → Complete job**을 진행합니다. 체크리스트·메모·사진·시간·부품을 기록할 수 있습니다.
+6. **Create invoice**로 청구서를 만들고, 실제 다른 경로로 받은 돈을 **Record payment**로 기록합니다. 부분 수금도 가능합니다.
+
+금액은 서버에서 정수 센트로 저장합니다. 할인 후 금액에 세율을 적용하고 세금은 센트 단위 half-up으로 반올림합니다. 현장·품목별 실제 세법을 자동 판단하지 않습니다. 정기 계약의 방문 준비는 자동 결제가 아니라 승인된 견적을 만드는 동작입니다.
+
+## REA 사용과 확인 범위
+
+REA 6.5.0으로 공개 현장서비스 앱 **Beveren FSM의 TypeScript 훅 4개**를 실제 분석했습니다. 일정 조회·상태 필터, 기사와 작업 연결, 서비스 요청 추적 등 분석 결과와 공개 문서를 참고해 독립 구현했습니다. 제3자 소스를 이 앱에 복사하지 않았습니다.
+
+완성된 프런트엔드도 REA로 다시 분석했습니다. 근거, 재현 명령과 제한은 [REA 분석 기록](docs/REA.md)에 있습니다.
+
+**Jobber 로그인 탭의 내부 화면·네트워크에는 접근하지 못했습니다.** 따라서 이 앱은 Jobber 전체 기능을 추출한 복제본이 아니며 기능·화면 일치율도 검증하지 않았습니다. 공개된 CRM·견적·일정·청구 업무 범위를 참고한 독립 프로토타입입니다.
+
+## 검증
+
+현재 환경에 설치된 REA 패키지의 Playwright와 시스템 Chromium을 사용합니다.
+
+```bash
+node tests/workflow.cjs
+node tests/inspect.cjs
+python3 tests/recovery.py
+node tests/review.cjs
 ```
 
-## Quotation API
-- Websocket은 초당 5회, 분당 100회 연결 요청할 수 있습니다.
-- 종목, 캔들, 체결, 티커, 호가 API는 분당 600회, 초당 10회 사용 가능합니다.
+`workflow.cjs`는 임시 DB와 별도 포트의 서버에서 고객→견적→승인→방문→작업→청구→부분 수금→완납을 실제 브라우저로 실행합니다. 일정 중복, 장비 소유관계, 잘못된 금액, 재고 부족, 시간 중복, 첨부 검증, 정기 방문 생성, 모바일 화면, 서버 재시작 후 데이터 유지도 확인합니다. 기본 DB는 테스트로 변경하지 않습니다. 추가 복구 테스트 10개와 UI 검증 11개 묶음도 통과했습니다. UI 검증은 4개 폭에서 16개 화면, 입력 창 12개, 빈 상태, 키보드와 PDF 출력을 포함합니다. `inspect.cjs`는 실행 중인 기본 서버의 16개 화면을 확인하고 대시보드와 모바일 스크린샷을 저장합니다.
 
-####  암호화폐 목록
-`get_tickers` 함수는 업비트가 지원하는 모든 암호화폐 목록을 얻어옵니다.
-```python
-print(pyupbit.get_tickers())
-```
-```
-['KRW-BTC', 'KRW-DASH', 'KRW-ETH', 'BTC-NEO', 'BTC-ETH', 'BTC-LTC', ... ]
-```
+## 아직 외부 연동·상용 운영이 필요한 부분
 
-업비트가 지원하는 암호화폐 목록 중 특정 시장(`fiat`)에 매매가 가능한 목록만 얻어올 수 있습니다. `KRW`/`BTC`/`USDT` 시장을 조회할 수 있습니다.
-```python
-print(pyupbit.get_tickers(fiat="KRW"))
-```
-```
-['KRW-BTC', 'KRW-DASH', 'KRW-ETH', 'KRW-NEO', 'KRW-MTL', 'KRW-LTC', ...]
-```
+- 카드 결제·환불·자동 정기 결제: 결제대행사 연동 없음. 수금 내역만 기록합니다.
+- 이메일·SMS·캠페인·온라인 예약·통화: 초안 저장·복사만 지원하며 발송하지 않습니다.
+- 고객 포털: 내부 미리보기만 제공하며 공개 로그인·승인·결제 페이지는 없습니다.
+- QuickBooks·은행·지도 경로 최적화·GPS·Jobber 데이터 동기화: 미연동입니다.
+- 별도 사용자 로그인·역할·회사별 데이터 격리·급여·실시간 모바일 동기화: 구현하지 않았습니다.
 
+기존 실행기는 로컬 워크스페이스용입니다. 온라인 배포 어댑터에는 단일 회사용 로그인과 세션 보호를 추가했습니다. 컨테이너·HTTPS 주소·영구 볼륨 설정은 [DEPLOY.md](DEPLOY.md)를 참고하세요. 실제 호스팅 게시와 외부 연동은 완료되지 않았습니다.
 
-#### 최근 체결가격
-`get_current_price` 함수는 암호화폐의 현재가를 얻어옵니다. 함수로 티커를 넣어줘야 합니다.
-```python
-print(pyupbit.get_current_price("KRW-BTC"))
-```
-
-`float` 타입의 현재가가 반환됩니다.
-```
-8392000.0
-```
-
-리스트에 여러 개의 티커를 입력해 한 번에 현재가를 조회할 수 있습니다.
-```python
-print(pyupbit.get_current_price(["KRW-BTC", "KRW-XRP"]))
-```
-
-여러 종목을 조회한 경우 딕셔너리로 현재가를 리턴합니다.
-
-```
-{'KRW-BTC': 8300000.0, 'KRW-XRP': 511.0}
-```
-
-`get_current_price` 함수는 최대 100개의 암호화폐를 조회할 수 있습니다. 100개 이상일 경우 분할해서 반복 조회해야 합니다.
-
-#### 차트 데이터
-`get_ohlcv` 함수는 고가/시가/저가/종가/거래량을 DataFrame으로 반환합니다.
-
-```python
-df = pyupbit.get_ohlcv("KRW-BTC")
-print(df.tail())
-```
-
-날짜가 오름차순으로 정렬돼 최근 날짜가 마지막에 위치합니다.
-```
-2021-03-21 09:00:00  67849000.0  68715000.0  65451000.0  67120000.0   8097.428878
-2021-03-22 09:00:00  67064000.0  68380000.0  64345000.0  64725000.0   8366.410551
-2021-03-23 09:00:00  64728000.0  66279000.0  63000000.0  65458000.0   9961.040596
-2021-03-24 09:00:00  65458000.0  68370000.0  64500000.0  64777000.0  11366.404524
-2021-03-25 09:00:00  64777000.0  65305000.0  63319000.0  64257000.0   2770.703203
-```
-
-`count` 파라미터는 조회 갯수를 지정합니다. 최근 영업일 부터 이전 `count`만큼의 이전 영업일까지 조회합니다. `count` 파라미터를 입력하지 않을 경우 default value는 200입니다.
-
-```python
-df = pyupbit.get_ohlcv("KRW-BTC", count=5)
-print(len(df))
-```
-위 코드는 최근 영업일 부터 과거 5개의 데이터가 조회됩니다.
-```
-5
-```
-
-`get_ohlcv` 함수는 웹 서버로 200개씩 데이터를 요청합니다. 200개 이상의 데이터를 요청한다면 0.1(default) 주기로 데이터를 수집합니다. 다른 API와 함께 사용한다면 조회 주기(`period`)를 늘려야 합니다. 이 때 `period` 옵션을 사용해서 주기를 초(second) 단위로 지정할 수 있습니다. 조회하는 데이터의 갯수가 200개 이하라면 period 옵션은 무시됩니다.
-
-```python
-df = pyupbit.get_ohlcv("KRW-BTC", count=600, period=1)
-```
-
-`interval` 파라미터는 조회단위를 지정합니다. 파라미터에는 다음 값을 지정할 수 있습니다.
-- `day`/`minute1`/`minute3`/`minute5`/`minute10`/`minute15`/`minute30`/`minute60`/`minute240`/`week`/`month`
-
-
-```python
-print(pyupbit.get_ohlcv("KRW-BTC", interval="day")              # 일봉 데이터 (5일)
-print(pyupbit.get_ohlcv("KRW-BTC", interval="minute1"))         # 분봉 데이터
-print(pyupbit.get_ohlcv("KRW-BTC", interval="week"))            # 주봉 데이터
-```
-
-`to` 파라미터에 입력된 이전 단위(`interval`)까지의 데이터를 데이터프레임으로 얻을 수 있습니다. 예를 들어, 다음 코드는 `2020-10-10`일 보다 하루 전인 `2020-10-09`을 까지의 200개 데이터를 조회합니다. 단위를 설정하지 않았으니 단위는 일봉입니다.
-
-```python
-print(pyupbit.get_ohlcv("KRW-BTC", to="20201010"))
-```
-
-`interval`을 `minute1`로 지정한 경우 `2020-10-10` 보다 1분 이전 (`2020-10-09 23:59:00`)까지의 200개 데이터를 반환합니다.
-```python
-print(pyupbit.get_ohlcv("KRW-BTC", interval="minute1", to="20201010"))
-```
-
-----
-
-기준 시간 단위로 shift된 일봉을 계산할 수도 있습니다.
-
-예) 2019-06-01 12:00:00 ~ 2019-06-02 11:59:59
-```python
-print(pyupbit.get_daily_ohlcv_from_base("KRW-BTC", base=12))
-```
-
-예) 2019-06-01 13:00:00 ~ 2019-06-02 12:59:59
-```python
-print(pyupbit.get_daily_ohlcv_from_base("KRW-BTC", base=13))
-```
-
-#### 매수/매도 호가
-`get_orderbook` 함수는 매수/매도 호가 정보를 조회합니다.
-```python
-print(pyupbit.get_orderbook(ticker="KRW-BTC"))
-```
-
-리스트 안에 딕셔너리로 호가정보가 들어있습니다.
-- market : 암호화폐 티커
-- timestamp : 조회시간 (단위 ms)
-- orderbook_units : 매도호가/매수호가 정보
-```
-[{'market': 'KRW-BTC', 'timestamp': 1532118943687, 'total_ask_size': 17.08116346, 'total_bid_size': 3.07150192, 'orderbook_units': [{'ask_price': 8390000.0, 'bid_price': 8389000.0, 'ask_size': 3.16057415, 'bid_size': 0.5515136}, {'ask_price': 8392000.0, 'bid_price': 8387000.0, 'ask_size': 0.71247596, 'bid_size': 0.95157819}, {'ask_price': 8393000.0, 'bid_price': 8386000.0, 'ask_size': 3.70536818, 'bid_size': 0.15824907}, {'ask_price': 8398000.0, 'bid_price': 8385000.0, 'ask_size': 0.00481809, 'bid_size': 0.00119147}, {'ask_price': 8399000.0, 'bid_price': 8383000.0, 'ask_size': 1.1228337, 'bid_size': 0.05}, {'ask_price': 8400000.0, 'bid_price': 8380000.0, 'ask_size': 0.48354827, 'bid_size': 0.00613734}, {'ask_price': 8401000.0, 'bid_price': 8375000.0, 'ask_size': 0.00433629, 'bid_size': 0.05}, {'ask_price': 8402000.0, 'bid_price': 8374000.0, 'ask_size': 2.7434153, 'bid_size': 0.32104953}, {'ask_price': 8420000.0, 'bid_price': 8373000.0, 'ask_size': 0.0028, 'bid_size': 0.5010063}, {'ask_price': 8428000.0, 'bid_price': 8370000.0, 'ask_size': 5.14099352, 'bid_size': 0.48077642}]}]
-```
-
-`ticker` 파라미터에 리스트로 티커를 넣으면, 한 번에 여러 종목의 호가를 조회할 수 있습니다.
-```python
-print(pyupbit.get_orderbook(ticker=["KRW-BTC", "KRW-XRP"]))
-```
-
-
-## Exchange API
-주문은 초당 8회, 분당 200회 / 주문 외 요청은 초당 30회, 분당 900회 사용 가능합니다.
-
-#### 로그인
-Access Key와 Sercret Key를 사용해서 `Upbit` 객체를 생성합니다. 이는 웹페이지에서 로그인하는 것과 같습니다.
-
-```python
-import pyupbit
-
-access = "73kVqowGQOGEjdR31221j31j2ifekjkgjekgjekg"          # 본인 값으로 변경
-secret = "egjekgj3iekeEEkej3i3j3iejjwiEejiejeEeijg"          # 본인 값으로 변경
-upbit = pyupbit.Upbit(access, secret)
-```
-
-#### 잔고 조회
-`get_balance` 메서드는 입력받은 티커의 보유 수량 정보를 조회합니다.
-
-```python
-print(upbit.get_balance("KRW-XRP"))     # KRW-XRP 조회
-print(upbit.get_balance("KRW"))         # 보유 현금 조회
-```
-
-`get_balances` 메서드는 보유 중인 모든 암호화폐의 잔고 및 단가 정보를 딕셔너리로 조회합니다.
-```python
-print(upbit.get_balances())
-```
-
-```
-[{'currency': 'KRW',
-  'balance': '0.34689181',
-  'locked': '0.0',
-  'avg_buy_price': '0',
-  'avg_buy_price_modified': True,
-  'unit_currency': 'KRW'},
- {'currency': 'BTC',
-  'balance': '0.00174304',
-  'locked': '0.0',
-  'avg_buy_price': '64387000',
-  'avg_buy_price_modified': False,
-  'unit_currency': 'KRW'},]
-```
-
-#### 지정가 매수/매도 주문
-지정한 가격에 주문을 요청합니다. 다음은 원화 시장에 리플을 600원에 20개 매도 합니다.
-
-```python
-# 매도
-print(upbit.sell_limit_order("KRW-XRP", 600, 20))
-```
-
-주문 정보가 딕셔너리로 반환됩니다. uuid는 주문에 대한 고윳값으로 이를 사용해 추후 주문을 취소하거나 정정할 수 있습니다.
-
-```
-{'uuid': '0bcf0916-a7f5-49ed-80a9-a45e9e190cd3',
- 'side': 'ask',
- 'ord_type': 'limit',
- 'price': '600.0',
- 'state': 'wait',
- 'market': 'KRW-XRP',
- 'created_at': '2021-03-21T15:24:11+09:00',
- 'volume': '20.0',
- 'remaining_volume': '20.0',
- 'reserved_fee': '0.0',
- 'remaining_fee': '0.0',
- 'paid_fee': '0.0',
- 'locked': '20.0',
- 'executed_volume': '0.0',
- 'trades_count': 0}
-```
-
-다음은 원화 시장에 리플을 613원에 10개 매수 합니다.
-
-```python
-# 매수
-print(upbit.buy_limit_order("KRW-XRP", 613, 10))
-```
-
-```
-{'uuid': '1907dcdc-2b96-4d85-9963-866f7aa220cd',
- 'side': 'bid',
- 'ord_type': 'limit',
- 'price': '613.0',
- 'state': 'wait',
- 'market': 'KRW-XRP',
- 'created_at': '2021-03-21T15:10:32+09:00',
- 'volume': '10.0',
- 'remaining_volume': '10.0',
- 'reserved_fee': '3.065',
- 'remaining_fee': '3.065',
- 'paid_fee': '0.0',
- 'locked': '6133.065',
- 'executed_volume': '0.0',
- 'trades_count': 0}
-```
-
-#### 시장가 매수/매도 주문
-시장가 매수는 최우선 매도호가에 즉시 매수합니다. `buy_market_order` 메서드로 티커와 매수 금액만을 입력합니다. 매수 금액은 수수료를 제외한 금액입니다. 다음 예제에서 주문한 10000원은 수수료가 제외된 금액입니다. 수수료가 0.05%라면 수수료를 포함한 10005원의 현금을 보유하고 있어야 합니다.
-
-```python
-print(upbit.buy_market_order("KRW-XRP", 10000))
-```
-
-다음은 리플 30개를 시장가 매도합니다. 매도대금이 총 10000원이라면 수수료를 제외한 금액이 입금됩니다. 만약 수수료가 0.05%라면 9995원 받을 수 있습니다.
-```python
-print(upbit.sell_market_order("KRW-XRP", 30))
-```
-
-#### 미체결 주문 조회
-
-`get_order` 메서드는 입력된 암호화폐의 미체결 주문을 조회합니다.
-
-```python
-upbit.get_order("KRW-LTC")
-```
-
-미체결 주문이 있다면 리스트로 상세 내역을 반환합니다. 다음은 250000원에 매도(ask) 주문한 LTC이 1개(volume)있다는 의미입니다.
-```
-[{'uuid': '50e184b3-9b4f-4bb0-9c03-30318e3ff10a',
-  'side': 'ask',
-  'ord_type': 'limit',
-  'price': '250000.0',
-  'state': 'wait',
-  'market': 'KRW-LTC',
-  'created_at': '2021-03-25T14:10:53+09:00',
-  'volume': '1.0',
-  'remaining_volume': '1.0',
-  'reserved_fee': '0.0',
-  'remaining_fee': '0.0',
-  'paid_fee': '0.0',
-  'locked': '1.0',
-  'executed_volume': '0.0',
-  'trades_count': 0}]
-```
-
-`state` 파라미터를 사용하면 완료된 주문들을 조회할 수 있습니다.
-
-```python
-print(upbit.get_order("KRW-LTC", state="done"))
-```
-```
-[{'uuid': '0694def7-5ada-405f-b0f3-053801d5b190',
-  'side': 'ask',
-  'ord_type': 'market',
-  'price': None,
-  'state': 'done',
-  'market': 'KRW-LTC',
-  'created_at': '2021-03-21T14:43:40+09:00',
-  'volume': '0.07336815',
-  'remaining_volume': '0.0',
-  'reserved_fee': '0.0',
-  'remaining_fee': '0.0',
-  'paid_fee': '8.39331636',
-  'locked': '0.0',
-  'executed_volume': '0.07336815',
-  'trades_count': 1},
- {'uuid': '48d6d451-3db5-4357-9d5a-bfb8f417c943',
-  'side': 'ask',
-  'ord_type': 'limit',
-  'price': '230000.0',
-  'state': 'done',
-  'market': 'KRW-LTC',
-  'created_at': '2021-03-17T01:06:55+09:00',
-  'volume': '0.5',
-  'remaining_volume': '0.0',
-  'reserved_fee': '0.0',
-  'remaining_fee': '0.0',
-  'paid_fee': '58.775',
-  'locked': '0.0',
-  'executed_volume': '0.5',
-  'trades_count': 2}]
-```
-
-`uuid`를 사용해서 특정 주문을 상세 조회할 수 있습니다. `uuid`를 사용하면 다른 파라미터는 무시됩니다.
-```python
-order = upbit.get_order('50e184b3-9b4f-4bb0-9c03-30318e3ff10a')
-print(order)
-```
-
-결과를 참고하면 지정가 매도를 실행했으며 주문은 취소(`cancel`) 됐음을 알 수 있습니다
-```
-{'uuid': '50e184b3-9b4f-4bb0-9c03-30318e3ff10a', 'side': 'ask', 'ord_type': 'limit', 'price': '250000.0', 'state': 'cancel', 'market': 'KRW-LTC', 'created_at': '2021-03-25T14:10:53+09:00', 'volume': '1.0', 'remaining_volume': '1.0', 'reserved_fee': '0.0', 'remaining_fee': '0.0', 'paid_fee': '0.0', 'locked': '1.0', 'executed_volume': '0.0', 'trades_count': 0, 'trades': []}
-```
-
-#### 매수/매도 주문 취소
-주문 함수의 리턴 값 중 uuid 값을 사용해서 주문을 취소할 수 있습니다.
-
-```python
-print(upbit.cancel_order('50e184b3-9b4f-4bb0-9c03-30318e3ff10a'))
-```
-
-정상 처리됐다면 다음과 같이 딕셔너리가 반환됩니다.
-```
-{'uuid': '50e184b3-9b4f-4bb0-9c03-30318e3ff10a', 'side': 'ask', 'ord_type': 'limit', 'price': '250000.0', 'state': 'wait', 'market': 'KRW-LTC', 'created_at': '2021-03-25T14:10:53+09:00', 'volume': '1.0', 'remaining_volume': '1.0', 'reserved_fee': '0.0', 'remaining_fee': '0.0', 'paid_fee': '0.0', 'locked': '1.0', 'executed_volume': '0.0', 'trades_count': 0}
-```
-
-#### 웹소켓
-
-WebSocket을 이용해서 `현재가`, `호가`, `체결`에 대한 정보를 수신합니다.
-- 첫 번째 파라미터에는 수신정보를 입력하며 `ticker`, `orderbook`, `transaction`을 사용할 수 있습니다.
-- 두 번째 파라미터는 구독할 필터를 설정하며 암호화폐의 티커를 입력합니다. 현재 버전에서는 원화 시장만을 지원합니다.
-
-```python
-from pyupbit import WebSocketManager
-
-if __name__ == "__main__":
-    wm = WebSocketManager("ticker", ["KRW-BTC"])
-    for i in range(10):
-        data = wm.get()
-        print(data)
-    wm.terminate()
-```
-주의: 웹소켓의 multiprocessing을 위해 `__name__` guard를 반드시 써줘야 합니다.
-
-PyQt5와 함께 웹소켓을 사용하는 예제는 다음 코드를 참고하세요.
-- 버튼을 클릭하면 웹소켓에서 가격정보를 가져와서 화면에 출력합니다.
-- https://gist.github.com/mr-yoo/a3d1f8a4152f94cf61e4bc566659cd20
-
-
-WebSocketClient 클래스는 외부에서 프로세스 생성 및 큐를 전달하는 구조에서 사용합니다. WebSocketManager와 달리 사용자가 프로세스를 생성하고 사용할 큐를 입력해줘야 합니다. 
-
-```
-import multiprocessing as mp
-import pyupbit
-
-
-if __name__ == "__main__":
-    queue = mp.Queue()
-    proc = mp.Process(
-        target=pyupbit.WebSocketClient,
-        args=('ticker', ["KRW-BTC"], queue),
-        daemon=True
-    )
-    proc.start()
-
-    while True:
-        data = queue.get()
-        print(data)
-```
+Windows/macOS용 실행기를 포함하지만 실제 검증 환경은 Linux/Chromium입니다. Windows의 시간대 자료 부재 상황은 별도로 재현해 검증했습니다. `assets/Los_Angeles.tzif`는 IANA의 공개 시간대 데이터이며 라이선스는 같은 폴더에 있습니다.
