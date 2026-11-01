@@ -1,0 +1,148 @@
+{
+  "evidence_id": "ev_db635155bb826cb58f6dee80931bc824e8cad7d513b85573258e4e0c00bae77e",
+  "provider": {
+    "id": "rea-playwright-browser-scenario",
+    "name": "REA Playwright browser scenario capture provider",
+    "version": "1"
+  },
+  "steps": [
+    {
+      "step": "scenario_start",
+      "action": "goto_start",
+      "status": "completed",
+      "url": "http://127.0.0.1:3000/#/"
+    },
+    {
+      "step": "home_loaded",
+      "action": "wait_for",
+      "status": "completed",
+      "url": "http://127.0.0.1:3000/#/"
+    },
+    {
+      "step": "open_clients",
+      "action": "click",
+      "status": "completed",
+      "url": "http://127.0.0.1:3000/#/clients"
+    },
+    {
+      "step": "new_client",
+      "action": "click",
+      "status": "completed",
+      "url": "http://127.0.0.1:3000/#/clients/new"
+    },
+    {
+      "step": "fill_first",
+      "action": "fill",
+      "status": "completed",
+      "url": "http://127.0.0.1:3000/#/clients/new"
+    },
+    {
+      "step": "fill_last",
+      "action": "fill",
+      "status": "completed",
+      "url": "http://127.0.0.1:3000/#/clients/new"
+    },
+    {
+      "step": "fill_email",
+      "action": "fill",
+      "status": "completed",
+      "url": "http://127.0.0.1:3000/#/clients/new"
+    },
+    {
+      "step": "save_client",
+      "action": "click",
+      "status": "completed",
+      "url": "http://127.0.0.1:3000/#/clients/4"
+    },
+    {
+      "step": "client_page",
+      "action": "wait_for",
+      "status": "completed",
+      "url": "http://127.0.0.1:3000/#/clients/4"
+    },
+    {
+      "step": "new_quote",
+      "action": "click",
+      "status": "completed",
+      "url": "http://127.0.0.1:3000/#/quotes/new?client=4"
+    },
+    {
+      "step": "quote_title",
+      "action": "fill",
+      "status": "completed",
+      "url": "http://127.0.0.1:3000/#/quotes/new?client=4"
+    },
+    {
+      "step": "item_name",
+      "action": "fill",
+      "status": "completed",
+      "url": "http://127.0.0.1:3000/#/quotes/new?client=4"
+    },
+    {
+      "step": "item_qty",
+      "action": "fill",
+      "status": "completed",
+      "url": "http://127.0.0.1:3000/#/quotes/new?client=4"
+    },
+    {
+      "step": "item_price",
+      "action": "fill",
+      "status": "completed",
+      "url": "http://127.0.0.1:3000/#/quotes/new?client=4"
+    },
+    {
+      "step": "save_quote",
+      "action": "click",
+      "status": "completed",
+      "url": "http://127.0.0.1:3000/#/quotes/new?client=4"
+    },
+    {
+      "step": "send_quote",
+      "action": "click",
+      "status": "completed",
+      "url": "http://127.0.0.1:3000/#/quotes/4"
+    },
+    {
+      "step": "approve_quote",
+      "action": "click",
+      "status": "completed",
+      "url": "http://127.0.0.1:3000/#/quotes/4"
+    },
+    {
+      "step": "convert_quote",
+      "action": "click",
+      "status": "completed",
+      "url": "http://127.0.0.1:3000/#/quotes/4"
+    },
+    {
+      "step": "complete_job",
+      "action": "click",
+      "status": "completed",
+      "url": "http://127.0.0.1:3000/#/jobs/7"
+    },
+    {
+      "step": "create_invoice",
+      "action": "click",
+      "status": "completed",
+      "url": "http://127.0.0.1:3000/#/jobs/7"
+    },
+    {
+      "step": "send_invoice",
+      "action": "click",
+      "status": "completed",
+      "url": "http://127.0.0.1:3000/#/invoices/5"
+    },
+    {
+      "step": "invoice_open",
+      "action": "wait_for",
+      "status": "completed",
+      "url": "http://127.0.0.1:3000/#/invoices/5"
+    },
+    {
+      "step": "api_check",
+      "action": "request",
+      "status": "completed",
+      "url": "http://127.0.0.1:3000/#/invoices/5"
+    }
+  ]
+}

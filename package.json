@@ -1,0 +1,13 @@
+{
+  "name": "fieldops",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Internal field-service management tool: requests, quotes, jobs, scheduling, invoices, payments and a client hub.",
+  "type": "module",
+  "engines": { "node": ">=22.13" },
+  "scripts": {
+    "start": "node --no-warnings src/main.js",
+    "start:demo": "node --no-warnings src/main.js --seed",
+    "test": "node --no-warnings --test \"tests/**/*.test.js\""
+  }
+}

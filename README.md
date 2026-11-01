@@ -1,26 +1,49 @@
-# REA (Reverse Engineer Anything) workspace
+# FieldOps
 
-This repository is configured to use [REA](https://github.com/morluto/rea) (`rea-agents`), an agent toolkit for reverse engineering apps, websites, protocols and native binaries.
+Internal field-service management tool covering requests, quotes, jobs, scheduling, invoices, payments and a client hub.
+It uses only the Node.js standard library plus the built-in SQLite, so there is no `npm install`.
 
-## Claude Code (project plugin)
+## Run
 
-`.claude/settings.json` registers the official `morluto/rea` marketplace and enables the `rea@rea` plugin (MCP server + `reverse-engineer-anything` skill). When you open this repository in Claude Code and trust the folder, Claude Code prompts to install the plugin.
-
-Manual install:
-
-```bash
-claude plugin marketplace add morluto/rea
-claude plugin install rea@rea
-```
-
-Requires Node.js 22.x (>=22.23.4), 24.x (>=24.22.1) or 26.12.1+ on `PATH`.
-
-## CLI (optional)
+Requires Node.js 22.13 or later.
 
 ```bash
-npm install --global rea-agents
-rea setup
-rea doctor
+npm run start:demo
 ```
 
-Native binary analysis needs Hopper, Ghidra, IDA or Kuna. Static JavaScript analysis needs no native engine. See the [installation guide](https://github.com/morluto/rea/blob/main/docs/installation.md).
+Open http://127.0.0.1:3000. `start:demo` seeds demo data on first run; use `npm start` for an empty database.
+Environment variables: `PORT` (default 3000), `HOST` (default 127.0.0.1), `DB_FILE` (default `data/fsm.db`).
+
+```bash
+npm test
+```
+
+## Features
+
+| Area | What it does |
+|---|---|
+| Home | Workflow cards (requests, quotes, jobs, invoices), payments this month, today's visits |
+| Schedule | Week calendar by assignee color, unscheduled job list |
+| Clients | CRUD, search, related requests/quotes/jobs/invoices, Client Hub link |
+| Requests | New → convert to quote or job / archive |
+| Quotes | Line items and tax; Draft → Awaiting Response → Changes Requested / Approved (signature) → Converted; Archive |
+| Jobs | Schedule, assign, complete; derived Unscheduled / Today / Upcoming / Late / Requires Invoicing / Closed |
+| Invoices | Create from job or standalone; Draft → Awaiting Payment / Past Due / Paid; partial payments; Bad Debt |
+| Team | Members, roles, calendar colors |
+| Client Hub | Token link per client: submit requests, approve or request changes on quotes, pay invoices (demo) |
+
+The analysis basis, the evidence sources and the REA verification are in [docs/ANALYSIS.md](docs/ANALYSIS.md).
+
+## Limitations
+
+- No login. Keep it on localhost or put it behind SSO before sharing.
+- Client Hub payment only records a payment; there is no payment processor.
+- Email/SMS sending is not implemented. "Send" changes status only.
+
+## REA (Reverse Engineer Anything)
+
+`.claude/settings.json` enables the [REA](https://github.com/morluto/rea) Claude Code plugin for this repository. To use the CLI:
+
+```bash
+npx rea-agents setup
+```

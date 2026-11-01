@@ -1,0 +1,270 @@
+{
+  "browser": {
+    "mode": "launch",
+    "executable_path": "/opt/pw-browsers/chromium-1243/chrome-linux64/chrome",
+    "headless": true
+  },
+  "start_url": {
+    "url": "http://127.0.0.1:3000/#/"
+  },
+  "actions": [
+    {
+      "step_id": "home_loaded",
+      "action": "wait_for",
+      "locator": {
+        "kind": "css",
+        "selector": "h1:has-text(\"Home\")"
+      },
+      "state": "visible",
+      "timeout_ms": 10000
+    },
+    {
+      "step_id": "open_clients",
+      "action": "click",
+      "locator": {
+        "kind": "role",
+        "role": "link",
+        "name": "Clients"
+      },
+      "timeout_ms": 10000
+    },
+    {
+      "step_id": "new_client",
+      "action": "click",
+      "locator": {
+        "kind": "role",
+        "role": "link",
+        "name": "+ New client"
+      },
+      "timeout_ms": 10000
+    },
+    {
+      "step_id": "fill_first",
+      "action": "fill",
+      "locator": {
+        "kind": "role",
+        "role": "textbox",
+        "name": "First name"
+      },
+      "value": {
+        "source": "literal",
+        "value": "REA"
+      },
+      "timeout_ms": 10000
+    },
+    {
+      "step_id": "fill_last",
+      "action": "fill",
+      "locator": {
+        "kind": "role",
+        "role": "textbox",
+        "name": "Last name"
+      },
+      "value": {
+        "source": "literal",
+        "value": "Verifier"
+      },
+      "timeout_ms": 10000
+    },
+    {
+      "step_id": "fill_email",
+      "action": "fill",
+      "locator": {
+        "kind": "role",
+        "role": "textbox",
+        "name": "Email"
+      },
+      "value": {
+        "source": "literal",
+        "value": "rea@example.com"
+      },
+      "timeout_ms": 10000
+    },
+    {
+      "step_id": "save_client",
+      "action": "click",
+      "locator": {
+        "kind": "role",
+        "role": "button",
+        "name": "Save client"
+      },
+      "timeout_ms": 10000
+    },
+    {
+      "step_id": "client_page",
+      "action": "wait_for",
+      "locator": {
+        "kind": "css",
+        "selector": "h1:has-text(\"REA Verifier\")"
+      },
+      "state": "visible",
+      "timeout_ms": 10000
+    },
+    {
+      "step_id": "new_quote",
+      "action": "click",
+      "locator": {
+        "kind": "role",
+        "role": "link",
+        "name": "+ Quote"
+      },
+      "timeout_ms": 10000
+    },
+    {
+      "step_id": "quote_title",
+      "action": "fill",
+      "locator": {
+        "kind": "role",
+        "role": "textbox",
+        "name": "Title"
+      },
+      "value": {
+        "source": "literal",
+        "value": "Gutter cleaning"
+      },
+      "timeout_ms": 10000
+    },
+    {
+      "step_id": "item_name",
+      "action": "fill",
+      "locator": {
+        "kind": "role",
+        "role": "textbox",
+        "name": "Item name"
+      },
+      "value": {
+        "source": "literal",
+        "value": "Gutter cleaning (ft)"
+      },
+      "timeout_ms": 10000
+    },
+    {
+      "step_id": "item_qty",
+      "action": "fill",
+      "locator": {
+        "kind": "role",
+        "role": "spinbutton",
+        "name": "Quantity"
+      },
+      "value": {
+        "source": "literal",
+        "value": "120"
+      },
+      "timeout_ms": 10000
+    },
+    {
+      "step_id": "item_price",
+      "action": "fill",
+      "locator": {
+        "kind": "role",
+        "role": "spinbutton",
+        "name": "Unit price"
+      },
+      "value": {
+        "source": "literal",
+        "value": "1.5"
+      },
+      "timeout_ms": 10000
+    },
+    {
+      "step_id": "save_quote",
+      "action": "click",
+      "locator": {
+        "kind": "role",
+        "role": "button",
+        "name": "Save quote"
+      },
+      "timeout_ms": 10000
+    },
+    {
+      "step_id": "send_quote",
+      "action": "click",
+      "locator": {
+        "kind": "role",
+        "role": "button",
+        "name": "Send to client"
+      },
+      "timeout_ms": 10000
+    },
+    {
+      "step_id": "approve_quote",
+      "action": "click",
+      "locator": {
+        "kind": "role",
+        "role": "button",
+        "name": "Mark as approved"
+      },
+      "timeout_ms": 10000
+    },
+    {
+      "step_id": "convert_quote",
+      "action": "click",
+      "locator": {
+        "kind": "role",
+        "role": "button",
+        "name": "Convert to job"
+      },
+      "timeout_ms": 10000
+    },
+    {
+      "step_id": "complete_job",
+      "action": "click",
+      "locator": {
+        "kind": "role",
+        "role": "button",
+        "name": "Mark complete"
+      },
+      "timeout_ms": 10000
+    },
+    {
+      "step_id": "create_invoice",
+      "action": "click",
+      "locator": {
+        "kind": "role",
+        "role": "button",
+        "name": "Create invoice"
+      },
+      "timeout_ms": 10000
+    },
+    {
+      "step_id": "send_invoice",
+      "action": "click",
+      "locator": {
+        "kind": "role",
+        "role": "button",
+        "name": "Send to client"
+      },
+      "timeout_ms": 10000
+    },
+    {
+      "step_id": "invoice_open",
+      "action": "wait_for",
+      "locator": {
+        "kind": "role",
+        "role": "button",
+        "name": "Collect payment"
+      },
+      "state": "visible",
+      "timeout_ms": 10000
+    },
+    {
+      "step_id": "api_check",
+      "action": "request",
+      "method": "GET",
+      "path": "/api/invoices?status=awaiting_payment",
+      "expected_status": [
+        200
+      ]
+    }
+  ],
+  "capture": {
+    "after_each_step": [
+      "url"
+    ],
+    "at_end": [
+      "url",
+      "screenshot",
+      "accessibility"
+    ]
+  }
+}
